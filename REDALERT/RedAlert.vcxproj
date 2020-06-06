@@ -95,12 +95,13 @@
       <AdditionalIncludeDirectories>./win32lib</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>TRUE_FALSE_DEFINED;ENGLISH;WIN32;NDEBUG;_WINDOWS;_USRDLL;REDALERT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TRUE_FALSE_DEFINED;WINDOWS_IGNORE_PACKING_MISMATCH;ENGLISH;WIN32;NDEBUG;_WINDOWS;_USRDLL;REDALERT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>4800;4244;4996</DisableSpecificWarnings>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
