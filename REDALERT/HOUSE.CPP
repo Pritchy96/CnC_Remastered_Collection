@@ -5245,7 +5245,7 @@ bool HouseClass::AI_Attack(UrgencyType )
 {
 	assert(Houses.ID(this) == ID);
 
-	bool shuffle = !((Frame > TICKS_PER_MINUTE && !CurBuildings) || Percent_Chance(33));
+	bool shuffle = !((Frame > TICKS_PER_MINUTE && !CurBuildings) || Percent_Chance(10));
 	bool forced = (CurBuildings == 0);
 	int index;
 	for (index = 0; index < Aircraft.Count(); index++) {
@@ -5261,7 +5261,7 @@ bool HouseClass::AI_Attack(UrgencyType )
 		UnitClass * u = Units.Ptr(index);
 
 		if (u != NULL && !u->IsInLimbo && u->House == this && u->Strength > 0) {
-			if (!shuffle && u->Is_Weapon_Equipped() && (forced || Percent_Chance(75))) {
+			if (!shuffle && u->Is_Weapon_Equipped() && (forced || Percent_Chance(80))) {
 				u->Assign_Mission(MISSION_HUNT);
 			} else {
 
@@ -5279,7 +5279,7 @@ bool HouseClass::AI_Attack(UrgencyType )
 		InfantryClass * i = Infantry.Ptr(index);
 
 		if (i != NULL && !i->IsInLimbo && i->House == this && i->Strength > 0) {
-			if (!shuffle && (i->Is_Weapon_Equipped() || *i == INFANTRY_RENOVATOR) && (forced || Percent_Chance(75))) {
+			if (!shuffle && (i->Is_Weapon_Equipped() || *i == INFANTRY_RENOVATOR) && (forced || Percent_Chance(80))) {
 				i->Assign_Mission(MISSION_HUNT);
 			} else {
 
@@ -5293,7 +5293,7 @@ bool HouseClass::AI_Attack(UrgencyType )
 			}
 		}
 	}
-	Attack = Rule.AttackInterval * Random_Pick(TICKS_PER_MINUTE/2, TICKS_PER_MINUTE*2);
+	Attack = (Rule.AttackInterval /  1.2)  * Random_Pick(TICKS_PER_MINUTE/2, TICKS_PER_MINUTE*2);
 	return(true);
 }
 
