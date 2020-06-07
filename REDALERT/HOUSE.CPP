@@ -5293,7 +5293,7 @@ bool HouseClass::AI_Attack(UrgencyType )
 			}
 		}
 	}
-	Attack = (Rule.AttackInterval /  1.2)  * Random_Pick(TICKS_PER_MINUTE/2, TICKS_PER_MINUTE*2);
+	Attack = Rule.AttackInterval  * Random_Pick(TICKS_PER_MINUTE/2, TICKS_PER_MINUTE*2);
 	return(true);
 }
 
