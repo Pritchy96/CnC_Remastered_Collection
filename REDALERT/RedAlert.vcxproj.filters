@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Resource">
       <UniqueIdentifier>{f4599de7-e877-410c-943f-afc4bef70eb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ini files">
+      <UniqueIdentifier>{5f2bb0b5-3a8e-4524-a972-9599f3968c11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AADATA.CPP">
@@ -1813,6 +1816,7 @@
     <None Include="Win32Lib\WWMEM.INC">
       <Filter>Source Files\win32lib</Filter>
     </None>
+    <None Include="ccmod.json" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="KEYFBUFF.ASM">

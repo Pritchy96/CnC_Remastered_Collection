@@ -1,0 +1,9 @@
+{
+  "name": "<MODNAME>",
+  "description": "",
+  "author": "",
+  "load_order": 1,
+  "version_low": 0,
+  "version_high": 0,
+  "game_type": "RA"
+}
