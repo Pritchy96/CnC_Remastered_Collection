@@ -114,7 +114,7 @@
       <DataExecutionPrevention>false</DataExecutionPrevention>
     </Link>
     <PostBuildEvent>
-      <Command>py $(SolutionDir)\postbuild.py</Command>
+      <Command>py $(SolutionDir)\postbuild.py RA</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -757,6 +757,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </MASM>
     <MASM Include="Win32Lib\TOBUFF.ASM" />
+    <None Include="..\..\..\..\OneDrive - Qualcomm\Documents\CnCRemastered\Mods\Red_Alert\Aggressive AI\CCDATA\RULES.INI" />
     <None Include="ccmod.json" />
     <None Include="COORDA.ASM" />
     <MASM Include="KEYFBUFF.ASM">

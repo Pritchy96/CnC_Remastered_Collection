@@ -1,10 +1,11 @@
 import pathlib
 import json
+import sys
 
 from pathlib import Path
 
 dest   = Path.home() / "Documents/CnCRemastered/Mods/"
-source = Path(pathlib.PurePath()) #PurePath with no args gives current directory (git root)
+source = Path(__file__).resolve().parent
 
 def build_mod(isRaMod = False):
     ccmod_path = (source / "REDALERT/ccmod.json") if isRaMod else (source / "TIBEREANDAWN/ccmod.json")
@@ -71,5 +72,9 @@ def build_mod(isRaMod = False):
         print("no ccmod.json found at <" + str(ccmod_path) + ">. Not creating a " + ("Red Alert Mod." if isRaMod else "Tiberean Dawn Mod")) 
 
 
-build_mod(True);
-build_mod(False);
+if sys.argv[1] == "RA":
+    build_mod(True)
+elif sys.argv[1] == "TD":
+    build_mod(False)
+else:
+    print("ERROR: Please supply with argument \"RA\" for a Red Alert mod, or \"TD\" for a Tib Dawn mod")

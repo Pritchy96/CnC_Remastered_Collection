@@ -120,6 +120,9 @@
       <Command>
       </Command>
     </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>py $(SolutionDir)\postbuild.py TD</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <MASM Include="win32lib\TOBUFF.ASM" />
