@@ -6,8 +6,6 @@ from pathlib import Path
 dest   = Path.home() / "Documents/CnCRemastered/Mods/"
 source = Path(pathlib.PurePath()) #PurePath with no args gives current directory (git root)
 
-isRaMod = True
-
 def build_mod(isRaMod = False):
     ccmod_path = (source / "REDALERT/ccmod.json") if isRaMod else (source / "TIBEREANDAWN/ccmod.json")
 
