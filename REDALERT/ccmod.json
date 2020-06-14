@@ -1,0 +1,9 @@
+{
+  "name": "Better Harvesters",
+  "description": "Improves the Harvester AI such that a refinery can handle more Harvesters",
+  "author": "Pritchy96",
+  "load_order": 1,
+  "version_low": 4,
+  "version_high": 0,
+  "game_type": "RA"
+}

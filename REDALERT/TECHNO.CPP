@@ -6006,7 +6006,7 @@ BuildingClass * TechnoClass::Find_Docking_Bay(StructType b, bool friendly) const
 				!building->IsInLimbo &&
 				*building == b &&
 				(What_Am_I() == RTTI_AIRCRAFT || Map[building->Center_Coord()].Zones[Techno_Type_Class()->MZone] == Map[Center_Coord()].Zones[Techno_Type_Class()->MZone]) &&
-				((TechnoClass *)this)->Transmit_Message(RADIO_CAN_LOAD, building) == RADIO_ROGER) {
+				((((TechnoClass *)this)->Transmit_Message(RADIO_CAN_LOAD, building) == RADIO_ROGER) || b == STRUCT_REFINERY)) {	//Don't check for busy state if refinery.
 
 				/*
 				**	If the building qualifies and this building is better than the

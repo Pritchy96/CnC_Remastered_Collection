@@ -2809,6 +2809,7 @@ int UnitClass::Mission_Harvest(void)
 		FINDHOME,
 		HEADINGHOME,
 		GOINGTOIDLE,
+		UNLOAD
 	};
 
 	/*
@@ -2926,13 +2927,16 @@ int UnitClass::Mission_Harvest(void)
 				/*
 				**	Find nearby refinery and head to it?
 				*/
-				BuildingClass * nearest = Find_Docking_Bay(STRUCT_REFINERY, false);
-
+				nearestRefinery = Find_Docking_Bay(STRUCT_REFINERY, false);
+				Assign_Destination(::As_Target(Nearby_Location(nearestRefinery)));
+				Status = HEADINGHOME;
 				/*
 				**	Since the refinery said it was ok to load, establish radio
-				**	contact with the refinery and then await docking orders.
+				**	contact with the refinery and then aw
+				ait docking orders.
 				*/
-				if (nearest != NULL && Transmit_Message(RADIO_HELLO, nearest) == RADIO_ROGER) {
+				
+				/*if (nearest != NULL && Transmit_Message(RADIO_HELLO, nearest) == RADIO_ROGER) {
 					Status = HEADINGHOME;
 					if (nearest->House == PlayerPtr && (PlayerPtr->Capacity - PlayerPtr->Tiberium) < 300 && PlayerPtr->Capacity > 500 && (PlayerPtr->ActiveBScan & (STRUCTF_REFINERY | STRUCTF_CONST))) {
 						Speak(VOX_NEED_MO_CAPACITY);
@@ -2944,17 +2948,39 @@ int UnitClass::Mission_Harvest(void)
 					if (nearest != NULL) {
 						Assign_Destination(::As_Target(Nearby_Location(nearest)));
 					}
-				}
+				}*/
 			}
 			break;
 
-		/*
-		**	In communication with refinery so that it will successfully dock and
-		**	unload. If, for some reason, radio contact was lost, then hunt for
-		**	another refinery to unload at.
-		*/
 		case HEADINGHOME:
-			Assign_Mission(MISSION_ENTER);
+			if (nearestRefinery == 0 || !House->Is_Ally(nearestRefinery) || nearestRefineryCounter == nearestRefineryTimeout) {
+				nearestRefinery = Find_Docking_Bay(STRUCT_REFINERY, false);
+				nearestRefineryCounter = 0;
+			}
+
+			if (Distance(nearestRefinery) < 2100 || (FootClass::Head_To_Coord() == 0 && !Target_Legal(NavCom))) {
+
+				if (nearestRefinery != 0 && Transmit_Message(RADIO_HELLO, nearestRefinery) == RADIO_ROGER) {
+					Status = UNLOAD;
+					Assign_Destination(TARGET_NONE);
+					if (nearestRefinery->House == PlayerPtr && (PlayerPtr->Capacity - PlayerPtr->Tiberium) < 300 && PlayerPtr->Capacity > 500 && (PlayerPtr->ActiveBScan & (STRUCTF_REFINERY | STRUCTF_CONST))) {
+						Speak(VOX_NEED_MO_CAPACITY);
+					}
+				}
+
+				nearestRefineryCounter++;
+			}
+			
+			break;	
+
+			/*
+			**	In communication with refinery so that it will successfully dock and
+			**	unload. If, for some reason, radio contact was lost, then hunt for
+			**	another refinery to unload at.
+			*/
+		case UNLOAD:
+			
+			Set_Mission(MISSION_ENTER);
 			return(1);
 
 		/*

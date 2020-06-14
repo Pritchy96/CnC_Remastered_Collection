@@ -74,6 +74,10 @@ class UnitClass :	public DriveClass
 		unsigned Gold:5;
 		unsigned Gems:5;
 
+		BuildingClass* nearestRefinery = 0;
+		int nearestRefineryCounter;
+		const int nearestRefineryTimeout = 10;
+
 		/*
 		** This flag tells a unit that, if after reaching its destination, it
 		** should scatter away.  It's meant to help a LST unload its units by
