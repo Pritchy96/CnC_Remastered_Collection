@@ -74,9 +74,15 @@ class UnitClass :	public DriveClass
 		unsigned Gold:5;
 		unsigned Gems:5;
 
-		BuildingClass* nearestRefinery = 0;
-		int nearestRefineryCounter;
-		const int nearestRefineryTimeout = 10;
+		const int refTimeout = 70;	        //If the harv has been waiting for targetRef for this many ticks, try and find a new ref.
+		const int harvDistPollDelay = 10;	//Will only calc distance from harv to ref on the way home this many ticks (for performance reasons).
+		const int harvCheckRefIdleDist = 2100;	//The distance below which this harv will try and lock the ref for use.
+
+		BuildingClass* targetRef;		//Current best choice ref for unloading.
+		bool waitingforRef = false;		//Unit is close to its targetRef, but it is busy.
+		std::vector<std::pair<int, BuildingClass*>> nearestRefs;	//The int is the distance between the Harv (this) and each ref upon vector generation.
+		int refTimeoutCtr;			//Counts up to refTimeout before looking for a new ref.
+		int harvDistPollCtr = 0;	//Counts up to harvDistPollDelay before calculating harv > ref distance.
 
 		/*
 		** This flag tells a unit that, if after reaching its destination, it

@@ -131,6 +131,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #include	"function.h"
+#include <vector>
+#include <algorithm>
 
 
 /***************************************************************************
@@ -6021,6 +6023,62 @@ BuildingClass * TechnoClass::Find_Docking_Bay(StructType b, bool friendly) const
 		}
 	}
 	return(best);
+}
+
+
+/***********************************************************************************************
+ * TechnoClass::Get_Sorted_Docking_Bays -- Searches for a close docking bay.                   *
+ *                                                                                             *
+ *    This routine will be used to find a building that can serve as a docking bay. The        *
+ *    closest building that qualifies will be returned. If no building could be found then     *
+ *    return with NULL.                                                                        *
+ *                                                                                             *
+ * INPUT:   b  -- The structure type to look for.                                              *
+ *                                                                                             *
+ *          friendly -- Allow searching for allied buildings as well.                          *
+ *                                                                                             *
+ * OUTPUT:  Returns with a pointer to the building that can serve as the best docking bay.     *
+ *                                                                                             *
+ *                                                                                             *
+ * HISTORY:                                                                                    *
+ *   15/06/2020 Tom Pritchard : Created                                                        *
+ *=============================================================================================*/
+std::vector<std::pair<int, BuildingClass*>> TechnoClass::Get_Sorted_Docking_Bays(StructType b, bool friendly) const
+{
+	assert(IsActive);
+
+	std::vector<std::pair<int, BuildingClass*>> distOrderedBuildings;
+
+	/*
+	**	First check to see if there are ANY buildings of the specified
+	**	type in this house's inventory. If not, then don't bother to scan
+	**	for one.
+	*/
+	if (House->Get_Quantity(b) != 0) {
+		/*
+		**	Loop through all the buildings and find the one that matches the specification
+		**	and is willing to dock with this object.
+		*/
+		for (int index = 0; index < Buildings.Count(); index++) {
+			BuildingClass* building = Buildings.Ptr(index);
+
+			/*
+			**	Check to see if the building qualifies (preliminary scan).
+			*/
+			if (building != NULL &&
+				(friendly ? building->House->Is_Ally(this) : building->House == House) &&
+				!building->IsInLimbo &&
+				*building == b &&
+				(What_Am_I() == RTTI_AIRCRAFT || Map[building->Center_Coord()].Zones[Techno_Type_Class()->MZone] == Map[Center_Coord()].Zones[Techno_Type_Class()->MZone]) &&
+				((((TechnoClass*)this)->Transmit_Message(RADIO_CAN_LOAD, building) == RADIO_ROGER) || b == STRUCT_REFINERY)) {	//Don't check for busy state if refinery.
+
+				distOrderedBuildings.push_back(std::make_pair(Distance(building), building));
+			}
+		}
+	}
+
+	std::sort(std::begin(distOrderedBuildings), std::end(distOrderedBuildings));
+	return(distOrderedBuildings);
 }
 
 

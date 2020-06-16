@@ -199,7 +199,7 @@ RadioMessageType BuildingClass::Receive_Message(RadioClass * from, RadioMessageT
 					if (from->What_Am_I() == RTTI_UNIT &&
 						*((UnitClass *)from) == UNIT_HARVESTER &&
 						(ScenarioInit || !Is_Something_Attached())) {
-
+						
 						return(RADIO_ROGER);
 					}
 					break;

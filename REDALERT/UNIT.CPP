@@ -99,6 +99,7 @@
 
 #include	"function.h"
 #include "COORDA.h"
+#include <vector>
 
 /***********************************************************************************************
  * Recoil_Adjust -- Adjust pixel values in direction specified.                                *
@@ -2927,48 +2928,62 @@ int UnitClass::Mission_Harvest(void)
 				/*
 				**	Find nearby refinery and head to it?
 				*/
-				nearestRefinery = Find_Docking_Bay(STRUCT_REFINERY, false);
-				Assign_Destination(::As_Target(Nearby_Location(nearestRefinery)));
+				nearestRefs = Get_Sorted_Docking_Bays(STRUCT_REFINERY, false);
+
+				int lowestCost = INT_MAX;
+
+				//pair is <Distance(this), building>
+				for each (std::pair<int, BuildingClass*> pair in nearestRefs) {
+					//Do a (possibly poor) cost estimation for each ref
+					int cost = pair.first + (1400 * pair.second->HarvestersWaiting);
+
+					if (cost < lowestCost) {
+						lowestCost = cost;
+						targetRef = pair.second;
+					}
+				}
+
+				Assign_Destination(::As_Target(Nearby_Location(targetRef)));
 				Status = HEADINGHOME;
 				/*
 				**	Since the refinery said it was ok to load, establish radio
 				**	contact with the refinery and then aw
 				ait docking orders.
 				*/
-				
-				/*if (nearest != NULL && Transmit_Message(RADIO_HELLO, nearest) == RADIO_ROGER) {
-					Status = HEADINGHOME;
-					if (nearest->House == PlayerPtr && (PlayerPtr->Capacity - PlayerPtr->Tiberium) < 300 && PlayerPtr->Capacity > 500 && (PlayerPtr->ActiveBScan & (STRUCTF_REFINERY | STRUCTF_CONST))) {
-						Speak(VOX_NEED_MO_CAPACITY);
-					}
-				} else {
-					ScenarioInit++;
-					nearest = Find_Docking_Bay(STRUCT_REFINERY, false);
-					ScenarioInit--;
-					if (nearest != NULL) {
-						Assign_Destination(::As_Target(Nearby_Location(nearest)));
-					}
-				}*/
 			}
 			break;
 
 		case HEADINGHOME:
-			if (nearestRefinery == 0 || !House->Is_Ally(nearestRefinery) || nearestRefineryCounter == nearestRefineryTimeout) {
-				nearestRefinery = Find_Docking_Bay(STRUCT_REFINERY, false);
-				nearestRefineryCounter = 0;
+			//If ref is no longer valid, or if the timeout is reached, go back to FINDHOME to recalc best ref.
+			if (targetRef == 0 || !House->Is_Ally(targetRef) || refTimeoutCtr == refTimeout) {
+				if (targetRef != 0)
+					targetRef->HarvestersWaiting--;
+				waitingforRef = false;
+				refTimeoutCtr = 0;
+				Assign_Destination(TARGET_NONE);
+				Status = FINDHOME;
+				break;
 			}
 
-			if (Distance(nearestRefinery) < 2100 || (FootClass::Head_To_Coord() == 0 && !Target_Legal(NavCom))) {
+			//If the harvester is close enough to the ref, try and lock the ref down for unloading.
+			if (Distance(targetRef) < harvCheckRefIdleDist || (FootClass::Head_To_Coord() == 0 && !Target_Legal(NavCom))) {
+				//First time through this block in this loop.
+				if (!waitingforRef) {
+					targetRef->HarvestersWaiting++;
+					waitingforRef = true;
+					refTimeoutCtr = 0;
+				}
 
-				if (nearestRefinery != 0 && Transmit_Message(RADIO_HELLO, nearestRefinery) == RADIO_ROGER) {
+				//Try and lock down the ref.
+				if (targetRef != 0 && Transmit_Message(RADIO_HELLO, targetRef) == RADIO_ROGER) {
 					Status = UNLOAD;
-					Assign_Destination(TARGET_NONE);
-					if (nearestRefinery->House == PlayerPtr && (PlayerPtr->Capacity - PlayerPtr->Tiberium) < 300 && PlayerPtr->Capacity > 500 && (PlayerPtr->ActiveBScan & (STRUCTF_REFINERY | STRUCTF_CONST))) {
+					Assign_Destination(TARGET_NONE);	//Harv will abandon moving to a nearby location and go straight to undocking.
+					if (targetRef->House == PlayerPtr && (PlayerPtr->Capacity - PlayerPtr->Tiberium) < 300 && PlayerPtr->Capacity > 500 && (PlayerPtr->ActiveBScan & (STRUCTF_REFINERY | STRUCTF_CONST))) {
 						Speak(VOX_NEED_MO_CAPACITY);
 					}
 				}
 
-				nearestRefineryCounter++;
+				refTimeoutCtr++;
 			}
 			
 			break;	
@@ -2979,7 +2994,11 @@ int UnitClass::Mission_Harvest(void)
 			**	another refinery to unload at.
 			*/
 		case UNLOAD:
-			
+			if (waitingforRef) {
+				waitingforRef = false;
+				targetRef->HarvestersWaiting--;
+			}
+
 			Set_Mission(MISSION_ENTER);
 			return(1);
 

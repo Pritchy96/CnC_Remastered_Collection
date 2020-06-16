@@ -160,14 +160,14 @@ int max(int, int);
 long max(long, long);
 #endif
 
-template<class T> inline void swap(T &value1, T &value2)
+template<class T> inline void Val_Swap(T &value1, T &value2)
 {
 	T temp = value1;
 	value1 = value2;
 	value2 = temp;
 }
-int swap(int, int);
-long swap(long, long);
+int Val_Swap(int, int);
+long Val_Swap(long, long);
 
 template<class T> inline
 T Bound(T original, T minval, T maxval)

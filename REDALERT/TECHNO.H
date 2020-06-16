@@ -44,6 +44,7 @@
 #include	"bullet.h"
 #include	"door.h"
 #include	"crew.h"
+#include    "vector"
 
 /****************************************************************************
 **	This is the common data between building and units.
@@ -281,6 +282,7 @@ class TechnoClass :	public RadioClass,
 		virtual ActionType What_Action(CELL cell) const;
 		virtual ActionType What_Action(ObjectClass const * target) const;
 		virtual BuildingClass * Find_Docking_Bay(StructType b, bool friendly) const;
+		std::vector<std::pair<int, BuildingClass*>> TechnoClass::Get_Sorted_Docking_Bays(StructType b, bool friendly) const;
 		virtual CELL Find_Exit_Cell(TechnoClass const * techno) const;
 		virtual COORDINATE Fire_Coord(int which) const;
 		virtual DirType Desired_Load_Dir(ObjectClass * , CELL & moveto) const;

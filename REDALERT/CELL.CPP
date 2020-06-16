@@ -1292,7 +1292,7 @@ void CellClass::Draw_It(int x, int y, bool objects) const
 			*/
 			case 2:
 				if (optr[0]->Sort_Y() > optr[1]->Sort_Y()) {
-					swap(optr[0], optr[1]);
+					Val_Swap(optr[0], optr[1]);
 				}
 				break;
 
@@ -1301,13 +1301,13 @@ void CellClass::Draw_It(int x, int y, bool objects) const
 			*/
 			case 3:
 				if (optr[0]->Sort_Y() > optr[2]->Sort_Y()) {
-					swap(optr[0], optr[2]);
+					Val_Swap(optr[0], optr[2]);
 				}
 				if (optr[0]->Sort_Y() > optr[1]->Sort_Y()) {
-					swap(optr[0], optr[1]);
+					Val_Swap(optr[0], optr[1]);
 				}
 				if (optr[1]->Sort_Y() > optr[2]->Sort_Y()) {
-					swap(optr[1], optr[2]);
+					Val_Swap(optr[1], optr[2]);
 				}
 				break;
 

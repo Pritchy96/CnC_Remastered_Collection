@@ -208,6 +208,12 @@ class BuildingClass : public TechnoClass
 		*/
 		CDTimerClass<FrameTimerClass> PlacementDelay;
 
+
+		/*
+		**  This keeps a count of how many Harvesters are waiting at this ref
+		*/
+		int HarvestersWaiting = 0;
+
 		/*---------------------------------------------------------------------
 		**	Constructors, Destructors, and overloaded operators.
 		*/
