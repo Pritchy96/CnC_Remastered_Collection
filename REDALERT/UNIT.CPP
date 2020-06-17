@@ -2943,7 +2943,13 @@ int UnitClass::Mission_Harvest(void)
 					}
 				}
 
-				Assign_Destination(::As_Target(Nearby_Location(targetRef)));
+				CELL nearbyLocation = Nearby_Location(targetRef);
+
+				//Don't let waiting harvesters sit on the dock.
+				while (nearbyLocation == targetRef->Docking_Coord())
+					nearbyLocation = Nearby_Location(targetRef);
+	
+				Assign_Destination(::As_Target(nearbyLocation));
 				Status = HEADINGHOME;
 				/*
 				**	Since the refinery said it was ok to load, establish radio
@@ -2982,7 +2988,6 @@ int UnitClass::Mission_Harvest(void)
 						Speak(VOX_NEED_MO_CAPACITY);
 					}
 				}
-
 				refTimeoutCtr++;
 			}
 			
