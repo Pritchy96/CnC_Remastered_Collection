@@ -1817,6 +1817,9 @@
       <Filter>Source Files\win32lib</Filter>
     </None>
     <None Include="ccmod.json" />
+    <None Include="RULES.ini">
+      <Filter>Ini files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="KEYFBUFF.ASM">

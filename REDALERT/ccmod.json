@@ -1,0 +1,9 @@
+{
+  "name": "Aggressive AI",
+  "description": "A (very) basic mod which should make the enemy AI more aggressive (not any more competent, though).",
+  "author": "Pritchy96",
+  "load_order": 1,
+  "version_low": 4,
+  "version_high": 1,
+  "game_type": "RA"
+}
